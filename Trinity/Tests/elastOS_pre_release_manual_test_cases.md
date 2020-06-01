@@ -1,5 +1,13 @@
 # Applications
 
+## DIDSession
+
+| Test | Priority |
+| ---- | -------- |
+| New DID | High |
+| Import DID | High |
+| Select DID | High |
+
 ## Launcher
 
 | Test | Priority |
@@ -9,6 +17,8 @@
 | Open settings | High |
 | Show running apps | High |
 | Close app from running app list | High |
+| Show notification from Friend | High |
+| Notification with URL can open on click (Add friend request from friend) | High |
 
 ## Wallet App
 
@@ -65,8 +75,9 @@
 
 | Test | Priority |
 | ---- | -------- |
-| Add a friend with published DID | Medium |
+| Add a friend with published DID | High |
 | Browse a friend's app from apps his profile | Medium |
+| Share dapp with friends | Medium |
 
 ## DApps Store App
 
