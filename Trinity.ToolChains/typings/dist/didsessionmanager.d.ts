@@ -48,6 +48,14 @@ declare namespace DIDSessionManagerPlugin {
         avatar?: IdentityAvatar;
     }
 
+    /**
+     * Option parameters that can be passed during the sign in operation.
+     */
+    type SignInOptions = {
+        /** Suggested session langauge code to use? */
+        sessionLanguage?: string;
+    }
+
     interface DIDSessionManager {
         /**
          * Inserts a new identity entry and saves it permanently.
@@ -81,7 +89,7 @@ declare namespace DIDSessionManagerPlugin {
          * All dApps get sandboxed in this DID context and don't see any information about the other available
          * identities.
          */
-        signIn(entry: IdentityEntry): Promise<void>;
+        signIn(entry: IdentityEntry, options?: SignInOptions): Promise<void>;
 
         /**
          * Signs the active identity out. All opened dApps are closed as there is no more active DID session.
@@ -102,15 +110,15 @@ declare namespace DIDSessionManagerPlugin {
          * then returns a JWT. This JWT should be sent to the backend service, who can check its validity 
          * and confirm the DID.
          * 
-         * After that phase, it's up to the backend sevrice to use its own way to secure communications. Usually,
+         * After that phase, it's up to the backend service to use its own way to secure communications. Usually,
          * emitting a short-lived JWT access token to the user and using this token in for all exchanges is a 
          * recommended way.
          * 
          * @param nonce Random nonce that will be returned in the JWT to prevent replay attacks.
          * @param realm Custom app information about the calling scope to better identify this request and response.
          * @param expiresIn Number of minutes after which the generated token will expire. Defaults to 5 minutes.
-         * 
-         * @returns A DID-signed JWT token that contains the a W3C DID Verifiable Presentation in a "presentation" field.
+         *  
+         * @returns A DID-signed JWT token that contains the a W3C DID Verifiable Presentation in a "presentation" field. The presentation contains the original nonce and realm.
          */
         authenticate(nonce: string, realm: string, expiresIn?: Number): Promise<string>;
     }
