@@ -215,8 +215,8 @@ module.exports = class ManifestHelper {
 
         var manifestJson = editJsonFile(manifestPath);
 
-        manifestJson.set("start_url", "http://"+ipAddress+":8100");
-        manifestJson.set("type", "url");
+        manifestJson.set("start_url", "http://"+ipAddress+":8100/index.html");
+        manifestJson.set("type", "app");
 
         manifestJson.save(); // synchronous
     }
