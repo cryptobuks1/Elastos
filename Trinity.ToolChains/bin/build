@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import os
-import sys
-import subprocess
 import argparse
 import distutils.dir_util as dir_util
+import json
+import os
+import subprocess
+import sys
 import textwrap
 import timeit
 
@@ -13,7 +14,7 @@ import ela_plugin
 
 parser = argparse.ArgumentParser(description='Build the Elastor.Trinity project.',
                                  formatter_class=argparse.RawTextHelpFormatter)
-parser.add_argument('target', metavar='TARGET', choices=['all', 'clean', 'clobber','dapp', 'launcher', "plugin", "runtime"],
+parser.add_argument('target', metavar='TARGET', choices=['all', 'clean', 'clobber','dapp', 'launcher', "partner", "partners", "plugin", "runtime"],
                     help=textwrap.dedent('''\
                          Specify the target to build.
                          all: build all module: launcher, dapp, runtime;
@@ -22,10 +23,12 @@ parser.add_argument('target', metavar='TARGET', choices=['all', 'clean', 'clobbe
                          runtime: build runtime;
                          clean: delete runtime platforms;
                          clobber: delete all build files;
-                         plugin: reintall the specify plugin.
+                         plugin: reintall the specify plugin;
+                         partner: build the specify partner app;
+                         partners: build all partner apps.
                      '''))
-parser.add_argument('-p', '--path', dest='plugin_path', metavar='PATH', required=False,
-                    help='Specify the path of plugin.')
+parser.add_argument('-p', '--path', dest='target_path', metavar='PATH', required=False,
+                    help='Specify the path/name of plugin/Dapp.')
 parser.add_argument('-pf', '--platform', dest='platform', required=False,
                     help='Specify the build platform.')
 parser.add_argument('--release', action='store_true', help='build release')
@@ -55,7 +58,7 @@ RUNTIME_DIR_PATH=os.path.join(PROJECT_DIR_PATH, "Runtime")
 LAUNCHER_DIR_PATH=os.path.join(PROJECT_DIR_PATH, "Launcher")
 DAPPS_DIR_PATH=os.path.join(PROJECT_DIR_PATH, "Dapps")
 IONIC_DIR_PATH=os.path.join(DAPPS_DIR_PATH, "Ionic")
-BUILD_IN_DIR_PATH=os.path.join(RUNTIME_DIR_PATH, "www/built-in")
+BUILD_IN_DIR_PATH=os.path.join(RUNTIME_DIR_PATH, "www/built-in/")
 PLUGIN_DIR_PATH=os.path.join(PROJECT_DIR_PATH, "Plugins")
 
 def run_cmd(cmd, ignore_error=False):
@@ -73,6 +76,21 @@ def copy_tree(src, dst):
     print("Copying " + src + " To " + dst)
     dir_util.copy_tree(src, dst)
 
+def get_appid(manifest):
+    file_in = open(manifest, "r")
+    data = json.load(file_in)
+    return data['id']
+
+# build app and copy the www/* to Runtime/www/built-in/
+def build_app(app_path):
+    basename = os.path.basename(app_path)
+    print("\r\n-------------------- Building dapp: " + basename + " --------------------")
+    os.chdir(app_path)
+    run_cmd("npm install")
+    run_cmd("ionic build --prod")
+    app_id = get_appid(app_path +'/src/assets/manifest.json')
+    copy_tree("www", BUILD_IN_DIR_PATH + app_id)
+
 def add_firebase():
     if not os.path.isfile(os.path.join(RUNTIME_DIR_PATH + '/GoogleService-Info.plist')):
         print("Can not find GoogleService-Info.plist!")
@@ -83,6 +101,57 @@ def add_firebase():
 
     cmd="cordova plugin add cordova-plugin-firebasex"
     run_cmd(cmd)
+
+def load_partnerapps():
+    with open("partners.json",'r') as load_f:
+        partnerapps_dict = json.load(load_f)
+        apps_path = partnerapps_dict['dapppath']
+        if apps_path.strip() == "":
+            apps_path = "Dapps/Partner"
+        apps_fullpath = os.path.join(PROJECT_DIR_PATH, apps_path)
+        partnerapps_dict['apps_fullpath'] = apps_fullpath
+
+        if not os.path.isdir(apps_fullpath):
+            os.makedirs(apps_fullpath)
+        return partnerapps_dict
+
+def show_partnerapps():
+    partnerapps_dict = load_partnerapps()
+    print("  All partner apps:")
+    for app in partnerapps_dict['partnerapps']:
+        print("    " + app['name'])
+
+def get_code(app):
+    print("Get the code: " + app['name'])
+    if os.path.isdir(app['name']):
+        os.chdir(app['name'])
+        run_cmd("git checkout master")
+        run_cmd("git fetch --all")
+    else:
+        run_cmd("git clone " + app['repourl'] + " " + app['name'])
+        os.chdir(app['name'])
+
+    if app['commit'].strip() != "":
+        run_cmd("git checkout " + app['commit'])
+    elif app['tag'].strip() != "":
+        run_cmd("git checkout -b " + app['tag'] + " " + app['tag'], True)
+
+# Get the code of the partner app and build
+def build_partnerapp(apps_fullpath, app):
+    os.chdir(apps_fullpath)
+    get_code(app)
+
+    app_fullpath = os.path.join(apps_fullpath, app['name'])
+    build_app(app_fullpath)
+
+# Get the code of all partner apps and build
+def build_partnerapps(platform):
+    partnerapps_dict = load_partnerapps()
+    apps_fullpath = partnerapps_dict['apps_fullpath']
+
+    for app in partnerapps_dict['partnerapps']:
+        if platform in app['platforms']:
+            build_partnerapp(apps_fullpath, app)
 
 startTime = timeit.default_timer()
 
@@ -119,11 +188,11 @@ if args.target == "clobber":
             run_cmd("rm " + dir + "/package-lock.json", True)
 
 if args.target == "plugin":
-    if args.plugin_path == None:
+    if args.target_path == None:
         print("You can also specify the plugin path: build plugin -p pluginPath")
         ela_plugin.plugin_prepare(True)
         exit(0)
-    ela_plugin.re_install_plugin(os.path.join(PROJECT_DIR_PATH, args.plugin_path))
+    ela_plugin.re_install_plugin(os.path.join(PROJECT_DIR_PATH, args.target_path))
 
 if args.target == "all" or args.target == "launcher":
     os.chdir(LAUNCHER_DIR_PATH)
@@ -132,16 +201,34 @@ if args.target == "all" or args.target == "launcher":
     copy_tree("www", RUNTIME_DIR_PATH + "/www/launcher/")
 
 if args.target == "all" or args.target == "dapp":
-    os.chdir(DAPPS_DIR_PATH)
-    dirs = os.listdir(IONIC_DIR_PATH)
-    for dir in dirs:
-        dapp_dir = os.path.join(IONIC_DIR_PATH, dir)
-        if os.path.isdir(dapp_dir):
-            print("Building dapp: " + dir)
-            os.chdir(dapp_dir)
-            run_cmd("npm install")
-            run_cmd("ionic build --prod")
-            copy_tree("www", BUILD_IN_DIR_PATH + "/org.elastos.trinity.dapp." + dir.lower())
+    if args.target_path == None:
+        os.chdir(DAPPS_DIR_PATH)
+        dirs = os.listdir(IONIC_DIR_PATH)
+        for dir in dirs:
+            dapp_dir = os.path.join(IONIC_DIR_PATH, dir)
+            if os.path.isdir(dapp_dir):
+                build_app(dapp_dir)
+    else:
+        dapp_dir = os.path.join(PROJECT_DIR_PATH, args.target_path)
+        build_app(dapp_dir)
+
+if args.target == "partner":
+    if args.target_path == None:
+        show_partnerapps()
+        print("You must specify the dapp name: build partner -p dappname")
+        exit(0)
+    find_app = False
+    partnerapps_dict = load_partnerapps()
+    for app in partnerapps_dict['partnerapps']:
+        if args.target_path == app['name']:
+            find_app = True
+            build_partnerapp(partnerapps_dict['apps_fullpath'], app)
+    if not find_app:
+        print("Can't find the dapp:" + args.target_path)
+        show_partnerapps()
+
+if args.target == "partners":
+    build_partnerapps(build_platform)
 
 if args.target == "all" or args.target == "launcher" or args.target == "runtime":
     os.chdir(RUNTIME_DIR_PATH)

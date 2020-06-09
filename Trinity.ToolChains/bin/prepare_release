@@ -22,8 +22,13 @@ parser.add_argument('target', metavar='TARGET', choices=['all', 'build', 'incver
                          tag: add tag for trinity and all submodules;
                          update: update code.
                      '''))
+parser.add_argument('-pf', '--platform', dest='platform', required=False,
+                    help='Specify the build platform.')
 args = parser.parse_args()
 
+if not args.platform:
+    print("Pls choose the platform: [android, ios]")
+    exit(0)
 
 SCRIPT_PATH=os.path.realpath(__file__)
 TOOLCHAINS_DIR_PATH=os.path.dirname(os.path.dirname(SCRIPT_PATH))
@@ -146,7 +151,8 @@ if args.target == "incversion":
 if args.target == "all" or args.target == "build":
     os.chdir(PROJECT_DIR_PATH)
     check_firebase()
-    run_cmd('./ToolChains/bin/build all -pf all --release')
+    run_cmd('./ToolChains/bin/build partners -pf ' + args.platform)
+    run_cmd('./ToolChains/bin/build all -pf ' + args.platform ' --release')
 
 elapsed = timeit.default_timer() - startTime
 minutes = elapsed / 60

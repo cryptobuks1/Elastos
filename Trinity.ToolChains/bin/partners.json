@@ -1,0 +1,40 @@
+{
+    "partnerapps": [
+        {
+            "name": "dposvoting",
+            "repourl": "https://github.com/elastos/Elastos.Trinity.DApps.DPoSVoting.git",
+            "tag": "",
+            "platforms": ["ios","desktop"],
+            "commit": ""
+        },
+        {
+            "name": "crcvoting",
+            "repourl": "https://github.com/elastos/Elastos.Trinity.DApps.CRCouncilVoting.git",
+            "tag": "",
+            "platforms": ["ios","desktop"],
+            "commit": ""
+        },
+        {
+            "name": "dappstore",
+            "repourl": "https://github.com/elastos/Elastos.Trinity.DApps.DAppsStore.git",
+            "tag": "",
+            "platforms": ["android","desktop"],
+            "commit": ""
+        },
+        {
+            "name": "elaexplorer",
+            "repourl": "https://github.com/elastos/Elastos.Trinity.Dapps.ChainExplorer.git",
+            "tag": "",
+            "platforms": ["ios","desktop"],
+            "commit": ""
+        },
+        {
+            "name": "elanodes",
+            "repourl": "https://github.com/racollette/Elastos.Trinity.DApps.ELAnodes",
+            "tag": "v0.8.0",
+            "platforms": ["ios","desktop"],
+            "commit": ""
+        }
+    ],
+    "dapppath": "Dapps/Partner"
+}
