@@ -103,7 +103,8 @@ def add_firebase():
     run_cmd(cmd)
 
 def load_partnerapps():
-    with open("partners.json",'r') as load_f:
+    config_path = os.path.join(os.path.dirname(SCRIPT_PATH), "partners.json")
+    with open(config_path,'r') as load_f:
         partnerapps_dict = json.load(load_f)
         apps_path = partnerapps_dict['dapppath']
         if apps_path.strip() == "":
