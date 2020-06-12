@@ -26,10 +26,6 @@ parser.add_argument('-pf', '--platform', dest='platform', required=False,
                     help='Specify the build platform.')
 args = parser.parse_args()
 
-if not args.platform:
-    print("Pls choose the platform: [android, ios]")
-    exit(0)
-
 SCRIPT_PATH=os.path.realpath(__file__)
 TOOLCHAINS_DIR_PATH=os.path.dirname(os.path.dirname(SCRIPT_PATH))
 TOOLCHAINS_DIR_NAME=os.path.basename(TOOLCHAINS_DIR_PATH)
@@ -149,10 +145,13 @@ if args.target == "incversion":
             increase_version_manifest(dapp_dir +'/src/assets/manifest.json')
 
 if args.target == "all" or args.target == "build":
+    if not args.platform:
+        print("Pls choose the platform: [android, ios]")
+        exit(0)
     os.chdir(PROJECT_DIR_PATH)
     check_firebase()
     run_cmd('./ToolChains/bin/build partners -pf ' + args.platform)
-    run_cmd('./ToolChains/bin/build all -pf ' + args.platform ' --release')
+    run_cmd('./ToolChains/bin/build all -pf ' + args.platform + ' --release')
 
 elapsed = timeit.default_timer() - startTime
 minutes = elapsed / 60
