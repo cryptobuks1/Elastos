@@ -34,7 +34,15 @@
             "tag": "ios",
             "platforms": ["ios","desktop"],
             "commit": ""
-        }
+        },
+        {
+            "name": "academy",
+            "repourl": "https://gitlab.com/tuum-tech/academy",
+            "tag": "v1.7.1",
+            "folder": "tech.tuum.academy",
+            "platforms": ["ios","desktop"],
+            "commit": ""
+          }
     ],
     "dapppath": "Dapps/Partner"
 }
