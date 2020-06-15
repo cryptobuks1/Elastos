@@ -61,8 +61,10 @@ RUNTIME_DIR_PATH=os.path.join(PROJECT_DIR_PATH, "Runtime")
 LAUNCHER_DIR_PATH=os.path.join(PROJECT_DIR_PATH, "Launcher")
 DAPPS_DIR_PATH=os.path.join(PROJECT_DIR_PATH, "Dapps")
 IONIC_DIR_PATH=os.path.join(DAPPS_DIR_PATH, "Ionic")
-BUILD_IN_DIR_PATH=os.path.join(RUNTIME_DIR_PATH, "www/built-in/")
+BUILT_IN_DIR_PATH=os.path.join(RUNTIME_DIR_PATH, "www/built-in/")
 PLUGIN_DIR_PATH=os.path.join(PROJECT_DIR_PATH, "Plugins")
+BUILT_IN_MIRROR_ANDROID=os.path.join(RUNTIME_DIR_PATH, "platforms/android/app/src/main/assets/www/built-in/")
+BUILT_IN_MIRROR_IOS=os.path.join(RUNTIME_DIR_PATH, "platforms/ios/www/built-in/")
 
 def run_cmd(cmd, ignore_error=False):
     print("Running: " + cmd)
@@ -75,8 +77,10 @@ def remove_tree(directory):
     if os.path.isdir(directory):
         dir_util.remove_tree(directory)
 
-def copy_tree(src, dst):
+def copy_tree(src, dst, clean=True):
     print("Copying " + src + " To " + dst)
+    if clean:
+        remove_tree(dst)
     dir_util.copy_tree(src, dst)
 
 def get_appid(manifest):
@@ -85,14 +89,20 @@ def get_appid(manifest):
     return data['id']
 
 # build app and copy the www/* to Runtime/www/built-in/
-def build_app(app_path):
+def build_app(app_path, platform):
     basename = os.path.basename(app_path)
     print("\r\n-------------------- Building dapp: " + basename + " --------------------")
     os.chdir(app_path)
     run_cmd("npm install")
     run_cmd("ionic build --prod")
     app_id = get_appid(app_path +'/src/assets/manifest.json')
-    copy_tree("www", BUILD_IN_DIR_PATH + app_id)
+    copy_tree("www", BUILT_IN_DIR_PATH + app_id)
+    if platform == "all" or platform == "android":
+        if os.path.isdir(BUILT_IN_MIRROR_ANDROID):
+            copy_tree("www", BUILT_IN_MIRROR_ANDROID + app_id)
+    if platform == "all" or platform == "ios":
+        if os.path.isdir(BUILT_IN_MIRROR_IOS):
+            copy_tree("www", BUILT_IN_MIRROR_IOS + app_id)
 
 def add_firebase():
     if not os.path.isfile(os.path.join(RUNTIME_DIR_PATH + '/GoogleService-Info.plist')):
@@ -141,12 +151,14 @@ def get_code(app):
         run_cmd("git checkout " + app['tag'])
 
 # Get the code of the partner app and build
-def build_partnerapp(apps_fullpath, app):
+def build_partnerapp(apps_fullpath, app, platform):
     os.chdir(apps_fullpath)
     get_code(app)
 
     app_fullpath = os.path.join(apps_fullpath, app['name'])
-    build_app(app_fullpath)
+    if "folder" in app:
+        app_fullpath = os.path.join(app_fullpath, app['folder'])
+    build_app(app_fullpath, platform)
 
 # Get the code of all partner apps and build
 def build_partnerapps(platform):
@@ -155,7 +167,7 @@ def build_partnerapps(platform):
 
     for app in partnerapps_dict['partnerapps']:
         if platform in app['platforms']:
-            build_partnerapp(apps_fullpath, app)
+            build_partnerapp(apps_fullpath, app, platform)
 
 startTime = timeit.default_timer()
 
@@ -211,10 +223,10 @@ if args.target == "all" or args.target == "dapp":
         for dir in dirs:
             dapp_dir = os.path.join(IONIC_DIR_PATH, dir)
             if os.path.isdir(dapp_dir):
-                build_app(dapp_dir)
+                build_app(dapp_dir, build_platform)
     else:
         dapp_dir = os.path.join(PROJECT_DIR_PATH, args.target_path)
-        build_app(dapp_dir)
+        build_app(dapp_dir, build_platform)
 
 if args.target == "partner":
     if args.target_path == None:
@@ -226,7 +238,7 @@ if args.target == "partner":
     for app in partnerapps_dict['partnerapps']:
         if args.target_path == app['name']:
             find_app = True
-            build_partnerapp(partnerapps_dict['apps_fullpath'], app)
+            build_partnerapp(partnerapps_dict['apps_fullpath'], app, build_platform)
     if not find_app:
         print("Can't find the dapp:" + args.target_path)
         show_partnerapps()
