@@ -31,7 +31,7 @@
         {
             "name": "elanodes",
             "repourl": "https://github.com/racollette/Elastos.Trinity.DApps.ELAnodes",
-            "tag": "v0.8.0",
+            "tag": "ios",
             "platforms": ["ios","desktop"],
             "commit": ""
         }
