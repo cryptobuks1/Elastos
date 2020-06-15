@@ -248,7 +248,7 @@ if args.target == "partners":
 
 if args.target == "all" or args.target == "launcher" or args.target == "runtime":
     os.chdir(RUNTIME_DIR_PATH)
-    copy_tree("www_files", "www")
+    copy_tree("www_files", "www", False)
     ela_plugin.plugin_prepare(True)
     run_cmd("npm install")
     run_cmd("cordova prepare")
