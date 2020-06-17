@@ -42,7 +42,14 @@
             "folder": "tech.tuum.academy",
             "platforms": ["ios","desktop"],
             "commit": ""
-          }
+        },
+        {
+            "name": "hyper",
+            "repourl": "git@github.com:hypermessenger/hyper-messenger-elastOS.git",
+            "tag": "1.0",
+            "platforms": ["ios","desktop"],
+            "commit": ""
+        }
     ],
     "dapppath": "Dapps/Partner"
 }
