@@ -152,6 +152,7 @@
 | Launch a third party app from an external url | High |
 | Sign in from the DID Demo | High |
 | Sign in from nucleusconsole.com using QR code and scanner | High |
+| Sign in CR website with use elastos DID (https://www.cyberrepublic.org/login) | High |
 
 ## Security
 
