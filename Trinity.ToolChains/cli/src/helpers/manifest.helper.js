@@ -202,16 +202,20 @@ module.exports = class ManifestHelper {
         });
     }
 
+    // Prompt user which IP address he wants to use (or auto-detect if only one address)
+    async promptIpAddressToUse() {
+        let ipAddress = await this.promptOrGetLocalIpAddress();
+        console.log("Local IP address "+ipAddress+" was selected.");   
+        
+        return ipAddress;
+    }
+
     /**
      * Updates the given manifest with a start url that matches user's computer's IP address, instead of a local
      * index.html. This allows running ionic serve for easy debugging.
      */
-    async updateManifestForRemoteIndex(manifestPath) {
+    async updateManifestForRemoteIndex(manifestPath, ipAddress) {
         console.log("Updating DApp manifest to use your computer's IP address as a start url (remote debugging)")
-
-        // First, prompt user which IP address he wants to use (or auto-detect if only one address)
-        let ipAddress = await this.promptOrGetLocalIpAddress();
-        console.log("Local IP address "+ipAddress+" was selected.");
 
         var manifestJson = editJsonFile(manifestPath);
 

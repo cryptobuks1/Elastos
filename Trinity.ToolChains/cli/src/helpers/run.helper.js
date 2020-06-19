@@ -197,7 +197,7 @@ module.exports = class RunHelper {
         })
     }
 
-    runDownloadService(epkPath) {
+    runDownloadService(epkPath, ipAddress) {
         return new Promise((resolve, reject)=>{
             var server;
             let port = 3000
@@ -229,7 +229,13 @@ module.exports = class RunHelper {
             server = app.listen(port)
     
             // Advertise a trinitycli HTTP server
-            bonjour.publish({ name: 'trinitycli', type: 'trinitycli', port: port })
+            console.log("Publishing Bonjour service 'trinitycli', host: "+ipAddress+", port: "+port);
+            bonjour.publish({ 
+                name: 'trinitycli', 
+                type: 'trinitycli', 
+                host: ipAddress,
+                port: port 
+            })
 
             console.log("Waiting for the mobile app to download the dApp.".blue)
         })

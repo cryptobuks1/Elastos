@@ -68,18 +68,22 @@ async function runSharedDeploymentPhase(noDebug, forProd) {
     // Update the start_url in the trinity manifest
     // 
     // Clone the original manifest into a temporary manifest so that we don't touch user's original manifest.
+    var ipAddress = await manifestHelper.promptIpAddressToUse();
     var originalManifestPath = manifestHelper.getManifestPath(ionicHelper.getConfig().assets_path)
     var temporaryManifestPath = manifestHelper.cloneToTemporaryManifest(originalManifestPath)
     if (noDebug)
         manifestHelper.updateManifestForLocalIndex(temporaryManifestPath)
     else
-        await manifestHelper.updateManifestForRemoteIndex(temporaryManifestPath)
+        await manifestHelper.updateManifestForRemoteIndex(temporaryManifestPath, ipAddress)
 
     return new Promise((resolve, reject)=>{
         ionicHelper.updateNpmDependencies().then(() => {
             ionicHelper.runIonicBuild(forProd).then(() => {
                 dappHelper.packEPK(temporaryManifestPath).then((outputEPKPath)=>{
-                    resolve(outputEPKPath)
+                    resolve({
+                        outputEPKPath: outputEPKPath,
+                        ipAddress: ipAddress
+                    })
                 })
                 .catch((err)=>{
                     console.error("Failed to pack your DApp into a EPK file".red)
@@ -128,8 +132,8 @@ async function deployAndroidDApp(noDebug, forProd) {
     }
 
     //let outputEPKPath = "/var/folders/d2/nw213ddn1c7g6_zcp5940ckw0000gn/T/temp.epk"
-    runSharedDeploymentPhase(noDebug, forProd).then((outputEPKPath)=>{
-        runHelper.androidUploadEPK(outputEPKPath).then(()=>{
+    runSharedDeploymentPhase(noDebug, forProd).then((sharedInfo)=>{
+        runHelper.androidUploadEPK(sharedInfo.outputEPKPath).then(()=>{
             runHelper.androidInstallTempEPK().then(()=>{
                 console.log("RUN OPERATION COMPLETED".green)
 
@@ -178,8 +182,8 @@ async function deployiOSDApp(noDebug, forProd) {
     }
 
     //let outputEPKPath = "/var/folders/d2/nw213ddn1c7g6_zcp5940ckw0000gn/T/temp.epk"
-    runSharedDeploymentPhase(noDebug, forProd).then((outputEPKPath)=>{
-        runHelper.runDownloadService(outputEPKPath).then(()=>{
+    runSharedDeploymentPhase(noDebug, forProd).then((sharedInfo)=>{
+        runHelper.runDownloadService(sharedInfo.outputEPKPath, sharedInfo.ipAddress).then(()=>{
             console.log("RUN OPERATION COMPLETED".green)
         
             if (!noDebug) {
