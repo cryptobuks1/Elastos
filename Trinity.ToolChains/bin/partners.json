@@ -40,6 +40,7 @@
             "repourl": "https://gitlab.com/tuum-tech/academy",
             "tag": "v1.7.1",
             "folder": "tech.tuum.academy",
+            "outputPath":"www",
             "platforms": ["ios","desktop"],
             "commit": ""
         },
