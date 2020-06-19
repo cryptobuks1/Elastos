@@ -110,6 +110,9 @@ def build_app(app_path, platform, needBuild, output="www"):
 
 def delete_app(app_path, platform):
     basename = os.path.basename(app_path)
+    if not os.path.isdir(app_path):
+        return
+
     os.chdir(app_path)
     app_id = get_appid(app_path +'/src/assets/manifest.json')
     remove_tree(BUILT_IN_DIR_PATH + app_id)
