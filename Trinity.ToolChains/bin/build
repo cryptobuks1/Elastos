@@ -32,6 +32,7 @@ parser.add_argument('target', metavar='TARGET', choices=['all', 'clean', 'clobbe
                      '''))
 parser.add_argument('-p', '--path', dest='target_path', metavar='PATH', required=False,
                     help='Specify the path/name of plugin/Dapp.')
+parser.add_argument('--delete', action='store_true', help='Delete the dapp.')
 parser.add_argument('-pf', '--platform', dest='platform', required=False,
                     help='Specify the build platform.')
 parser.add_argument('--release', action='store_true', help='build release')
@@ -107,6 +108,18 @@ def build_app(app_path, platform, needBuild, output="www"):
         if os.path.isdir(BUILT_IN_MIRROR_IOS):
             copy_tree(output, BUILT_IN_MIRROR_IOS + app_id)
 
+def delete_app(app_path, platform):
+    basename = os.path.basename(app_path)
+    os.chdir(app_path)
+    app_id = get_appid(app_path +'/src/assets/manifest.json')
+    remove_tree(BUILT_IN_DIR_PATH + app_id)
+    if platform == "all" or platform == "android":
+        if os.path.isdir(BUILT_IN_MIRROR_ANDROID):
+            remove_tree(BUILT_IN_MIRROR_ANDROID + app_id)
+    if platform == "all" or platform == "ios":
+        if os.path.isdir(BUILT_IN_MIRROR_IOS):
+            remove_tree(BUILT_IN_MIRROR_IOS + app_id)
+
 def add_firebase():
     if not os.path.isfile(os.path.join(RUNTIME_DIR_PATH + '/GoogleService-Info.plist')):
         print("Can not find GoogleService-Info.plist!")
@@ -157,20 +170,25 @@ def get_code(app):
 # Get the code of the partner app and build
 def build_partnerapp(apps_fullpath, app, platform):
     os.chdir(apps_fullpath)
-    get_code(app)
-
-    needBuild = True
-    output = "www"
 
     app_fullpath = os.path.join(apps_fullpath, app['name'])
     if "folder" in app:
         app_fullpath = os.path.join(app_fullpath, app['folder'])
-    if "outputPath" in app:
-        # don't build, just copy
-        needBuild = False
-        output = app['outputPath']
 
-    build_app(app_fullpath, platform, needBuild, output)
+    if args.delete:
+        return delete_app(app_fullpath, platform)
+    else:
+        get_code(app)
+
+        needBuild = True
+        output = "www"
+
+        if "outputPath" in app:
+            # don't build, just copy
+            needBuild = False
+            output = app['outputPath']
+
+        build_app(app_fullpath, platform, needBuild, output)
 
 # Get the code of all partner apps and build
 def build_partnerapps(platform):

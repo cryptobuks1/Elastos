@@ -11,7 +11,7 @@
             "name": "crcvoting",
             "repourl": "https://github.com/elastos/Elastos.Trinity.DApps.CRCouncilVoting.git",
             "tag": "",
-            "platforms": ["ios","desktop"],
+            "platforms": ["desktop"],
             "commit": ""
         },
         {
