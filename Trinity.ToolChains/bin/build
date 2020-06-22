@@ -108,7 +108,7 @@ def build_app(app_path, platform, needBuild, output="www"):
         if os.path.isdir(BUILT_IN_MIRROR_IOS):
             copy_tree(output, BUILT_IN_MIRROR_IOS + app_id)
 
-def delete_app(app_path, platform):
+def delete_app(app_path):
     basename = os.path.basename(app_path)
     if not os.path.isdir(app_path):
         return
@@ -116,12 +116,10 @@ def delete_app(app_path, platform):
     os.chdir(app_path)
     app_id = get_appid(app_path +'/src/assets/manifest.json')
     remove_tree(BUILT_IN_DIR_PATH + app_id)
-    if platform == "all" or platform == "android":
-        if os.path.isdir(BUILT_IN_MIRROR_ANDROID):
-            remove_tree(BUILT_IN_MIRROR_ANDROID + app_id)
-    if platform == "all" or platform == "ios":
-        if os.path.isdir(BUILT_IN_MIRROR_IOS):
-            remove_tree(BUILT_IN_MIRROR_IOS + app_id)
+    if os.path.isdir(BUILT_IN_MIRROR_ANDROID + app_id):
+        remove_tree(BUILT_IN_MIRROR_ANDROID + app_id)
+    if os.path.isdir(BUILT_IN_MIRROR_IOS + app_id):
+        remove_tree(BUILT_IN_MIRROR_IOS + app_id)
 
 def add_firebase():
     if not os.path.isfile(os.path.join(RUNTIME_DIR_PATH + '/GoogleService-Info.plist')):
@@ -179,7 +177,7 @@ def build_partnerapp(apps_fullpath, app, platform):
         app_fullpath = os.path.join(app_fullpath, app['folder'])
 
     if args.delete:
-        return delete_app(app_fullpath, platform)
+        return delete_app(app_fullpath)
     else:
         get_code(app)
 
@@ -201,6 +199,16 @@ def build_partnerapps(platform):
     for app in partnerapps_dict['partnerapps']:
         if platform in app['platforms']:
             build_partnerapp(apps_fullpath, app, platform)
+
+def delete_partnerapps():
+    partnerapps_dict = load_partnerapps()
+    apps_fullpath = partnerapps_dict['apps_fullpath']
+
+    for app in partnerapps_dict['partnerapps']:
+        app_fullpath = os.path.join(apps_fullpath, app['name'])
+        if "folder" in app:
+            app_fullpath = os.path.join(app_fullpath, app['folder'])
+        delete_app(app_fullpath)
 
 startTime = timeit.default_timer()
 
@@ -277,7 +285,10 @@ if args.target == "partner":
         show_partnerapps()
 
 if args.target == "partners":
-    build_partnerapps(build_platform)
+    if args.delete:
+        delete_partnerapps()
+    else:
+        build_partnerapps(build_platform)
 
 if args.target == "all" or args.target == "launcher" or args.target == "runtime":
     os.chdir(RUNTIME_DIR_PATH)

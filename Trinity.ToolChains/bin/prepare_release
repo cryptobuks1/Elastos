@@ -60,6 +60,9 @@ def update_code():
     run_cmd("git submodule foreach 'git reset --hard && git checkout master'")
     run_cmd('git pull --rebase')
     run_cmd('git submodule update --init --rebase')
+    update_code = input("Clobber the porject? You should clobber when build a new version. Type 'y' to continue :")
+    if update_code.lower() == 'y':
+        run_cmd('./ToolChains/bin/build clobber')
 
 def tag():
     # for Trinity and all submodules
@@ -152,7 +155,7 @@ if args.target == "incversion":
 if args.target == "all" or args.target == "build":
     os.chdir(PROJECT_DIR_PATH)
     check_firebase()
-    run_cmd('./ToolChains/bin/build partners --delete -pf ' + args.platform)
+    run_cmd('./ToolChains/bin/build partners --delete')
     run_cmd('./ToolChains/bin/build partners -pf ' + args.platform)
     run_cmd('./ToolChains/bin/build all -pf ' + args.platform + ' --release')
 
