@@ -20,24 +20,31 @@
 | DID login with turn On biometrics by entering true information | High |
 | DID login with turn On biometrics by entering wrong information | High |
 | Select identity page: when the identity exceeds one page, you can see all the identities | Medium |
+| Share DID with Contact or Other app to add friend | High |
+| Sign out DID | High |
 
 ## Launcher
 
 | Test | Priority |
 | ---- | -------- |
 | Launch a built-in app | High |
-| Add/remove favorites | Medium |
+| Add/remove favorites from Recent Capsules | Medium |
 | Open scanner | Medium |
 | Open settings | High |
 | Open DPoSVoting and work well | High |
 | Show running apps | High |
-| Close app from running app list | High |
-| Show notification from Friend | High |
+| Close all apps from running app list | High |
+| Close a app from running app list | High |
+| Open app from running app list | High |
 | Capsule Marketplace is built in Android, but not in ios | High |
 | The built-in app is not in Recent Capsules | High |
 | Notification with URL can open on click (Add friend request from friend) | High |
 | Notification to distinguish between different DID sessions | Medium |
+| Show notification with time and app information | High |
+| Show notification from Friend | High |
+| Show notification from wallet | High |
 | When there is a new notification, the notification icon has a small red dot | Medium |
+| Open the app from the notifications | Medium |
 | After the notification has been read, the little red dot disappears | Medium |
 | Notification, running, and home icon: Toggle to close the content of the previous page | Medium |
 
@@ -131,7 +138,6 @@
 | Close Developer Options | High |
 | Password manager can be opened | Medium |
 | About Elastos, the link inside can jump | Medium |
-| Log out DID | High |
 
 ## Friends App
 
