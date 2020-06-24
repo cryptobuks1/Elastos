@@ -8,11 +8,18 @@
 | New DID with passphrase | High | （nothing now）
 | Import DID without passphrase | High |
 | Import DID with passphrase | High |
+| Create DID: the process of verifying mnemonic words, click back, and then verify again | Medium |
+| Import DID: the process of verifying mnemonic words, click back, and then verify again | Medium| |
 | Create DID does not continue after verifying mnemonic words, use the same mnemonic words to import DID | Medium |
-| Create or import DID, you can change words when the mnemonic word is wrong | High |
+| Create or import DID:you can change words when the mnemonic word is wrong | High |
+| import and import DID: For the same DID, you can repeat multiple times without reporting errors | High |
 | Select DID | High |
 | Switch from DID login with passphrase to DID login without passphrase | High |
 | Switch from DID login without passphrase to DID login with passphrase | High |
+| Switch from DID login with turn On and off biometrics | High |
+| DID login with turn On biometrics by entering true information | High |
+| DID login with turn On biometrics by entering wrong information | High |
+| Select identity page: when the identity exceeds one page, you can see all the identities | Medium |
 
 ## Launcher
 
@@ -22,10 +29,17 @@
 | Add/remove favorites | Medium |
 | Open scanner | Medium |
 | Open settings | High |
+| Open DPoSVoting and work well | High |
 | Show running apps | High |
 | Close app from running app list | High |
 | Show notification from Friend | High |
+| Capsule Marketplace is built in Android, but not in ios | High |
+| The built-in app is not in Recent Capsules | High |
 | Notification with URL can open on click (Add friend request from friend) | High |
+| Notification to distinguish between different DID sessions | Medium |
+| When there is a new notification, the notification icon has a small red dot | Medium |
+| After the notification has been read, the little red dot disappears | Medium |
+| Notification, running, and home icon: Toggle to close the content of the previous page | Medium |
 
 ## Wallet App
 
@@ -107,14 +121,15 @@
 | Launch Dapp | High |
 | Manage Dapp permissions: open or close | High |
 | Delete Dapp | High |
+| Delete Dapp need to confirm | High |
+| Delete Dapp：the built-in app can not be delete | High |
 | Change Language | High |
 | Use dark mode | High |
+| Use light mode | High |
 | Open Developer Options | High |
 | In developer mode, switch nodes | High |
 | Close Developer Options | High |
-| Use light mode | High |
-| Use dark mode | Medium |
-| Password manager | Medium |
+| Password manager can be opened | Medium |
 | About Elastos, the link inside can jump | Medium |
 | Log out DID | High |
 
@@ -136,6 +151,23 @@
 | Unfavorite contact | Medium |
 | Delete favorite contacts | Medium |
 
+## PasswordManager App
+
+| Test | Priority |
+| ---- | -------- |
+| Create master password | High|
+| Set password unlock mode | High|
+| View the password inside the capsule | High|
+| Create a password category | High|
+| Category names cannot be the same | High|
+| Password can be added | High|
+| Password name cannot be the same | High|
+| Password can be modified | High|
+| Password can be deleted | High|
+| Need to confirm when deleting password | High|
+| Password can be copied | High|
+| Password hidden display or direct display | High|
+
 ## DApps Store App
 
 | Test | Priority |
@@ -152,7 +184,7 @@
 | Launch a third party app from an external url | High |
 | Sign in from the DID Demo | High |
 | Sign in from nucleusconsole.com using QR code and scanner | High |
-| Sign in CR website with use elastos DID (https://www.cyberrepublic.org/login) | High |
+| Sign in CR website with use elastos DID (https://www.cyberrepublic.org/login):DID need to be published and then be associated with CR account| High |
 
 ## Security
 
@@ -161,6 +193,9 @@
 | Try to install an app from CLI without developer mode enabled | Medium |
 | Try to install an app with no verifiable DID signature | Medium |
 | Sign in from a website with an altered JWT token | Medium |
+| In the process of creating or importing the mnemonic of the identity, the mnemonic, password, and master password cannot be printed in the log | High |
+| In the process of creating or importing the mnemonic of wallet, the mnemonic, password cannot be printed in the log |High|
+| In the process of creating or modifying the Password, the password info cannot be printed in the log |High|
 
 ## Robustness
 
