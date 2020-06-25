@@ -36,6 +36,7 @@ export class GamePage {
   ionViewWillEnter() {
     titleBarManager.setTitle('Phaser Game Demo');
     titleBarManager.setBackgroundColor("#222428");
+    titleBarManager.setForegroundMode(TitleBarPlugin.TitleBarForegroundMode.LIGHT);
   }
 
   ionViewDidEnter() {

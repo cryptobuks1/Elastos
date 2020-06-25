@@ -18,6 +18,7 @@ export class HomePage {
   ionViewWillEnter() {
     titleBarManager.setTitle('HTML Game Demo');
     titleBarManager.setBackgroundColor("#222428");
+    titleBarManager.setForegroundMode(TitleBarPlugin.TitleBarForegroundMode.LIGHT);
   }
 
   ionViewDidEnter() {

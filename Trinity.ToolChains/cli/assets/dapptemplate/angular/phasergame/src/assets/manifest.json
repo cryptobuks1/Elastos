@@ -1,7 +1,7 @@
 {
   "id": "elastos.trinity.dapps.gamedemo2",
-  "version": "0.0.1",
-  "version_code": 1,
+  "version": "1.0.2",
+  "version_code": 3,
   "name": "Phaser Game Demo",
   "short_name": "Phaser Game Demo",
   "short_description": "Collect ELA",
@@ -23,8 +23,8 @@
     }
   ],
   "author": {
-    "name": "Elastos Foundation",
-    "email": "contact@elastos.org",
+    "name": "Chad Racelis",
+    "email": "chadracelis@yahoo.com",
     "website": "https://www.elastos.org"
   },
   "default_locale": "en",
@@ -33,7 +33,6 @@
     "NetworkStatus"
   ],
   "urls": [
-    "http://www.yourappserver.com/*"
   ],
   "background_color": "#4e8ef7",
   "theme_display": "show",
