@@ -19,7 +19,6 @@ export class CorePage implements OnInit {
 
   ionViewWillEnter() {
     titleBarManager.setTitle("Core Demos");
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
   }
 
 }

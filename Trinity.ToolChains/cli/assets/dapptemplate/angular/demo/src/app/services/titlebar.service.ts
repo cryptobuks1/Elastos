@@ -74,17 +74,17 @@ export class TitlebarService {
 
   /******************** Set Navigation ********************/
   setBackNavigation() {
-    // Set as app's home page and page's navigation back to browser
+/*     // Set as app's home page and page's navigation back to browser
     titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
     // Set page's navigation to previous page
     titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
     // Set page's navigation to close app
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE); */
   }
 
   /******************** Set Menu Items ********************/
   setMenuItems() {
-    titleBarManager.setupMenuItems(
+ /*    titleBarManager.setupMenuItems(
       [
         {
           key: "", // Add uniqute item key
@@ -92,11 +92,7 @@ export class TitlebarService {
           title: "" // Add item title
         }
       ],
-      this.itemFunction // Add item callback
-    );
+    ); */
   }
 
-  itemFunction() {
-    // Handle menu item
-  }
 }

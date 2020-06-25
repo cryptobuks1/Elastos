@@ -29,12 +29,10 @@ export class IntentDemoPage implements OnInit {
 
   ionViewWillEnter() {
     titleBarManager.setTitle('Intent Demo');
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
   }
 
   ionViewWillLeave() {
     titleBarManager.setTitle("Demo Template");
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
   }
 
   testIntent() {

@@ -19,6 +19,5 @@ export class AppmanagerPage implements OnInit {
 
   ionViewWillEnter() {
     titleBarManager.setTitle("App Manager Guide");
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
   }
 }
