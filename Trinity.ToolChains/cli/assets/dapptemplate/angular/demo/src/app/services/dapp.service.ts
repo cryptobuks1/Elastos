@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HelpComponent } from '../components/help/help.component';
 
 declare let appManager: AppManagerPlugin.AppManager;
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +24,7 @@ export class DAppService {
         appManager.setListener(msg => {
           this.onMessageReceived(msg);
         });
-
+        
         resolve();
       });
     }

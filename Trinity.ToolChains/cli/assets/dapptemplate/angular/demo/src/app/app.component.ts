@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Platform, IonRouterOutlet, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { DAppService } from './services/dapp.service';
+import { TitlebarService } from './services/titlebar.service';
 
 @Component({
   selector: 'my-app',
@@ -13,7 +14,8 @@ export class MyApp {
   constructor(
     private platform: Platform, 
     private navController: NavController, 
-    private dappService: DAppService
+    private dappService: DAppService,
+    private titlebarService: TitlebarService
   ) {
     this.initializeApp();
   }
@@ -24,6 +26,7 @@ export class MyApp {
       // plugins such as AppManager or TitleBarManager are not ready.
 
       this.dappService.init();
+      this.titlebarService.init();
       this.navController.navigateRoot("/home");
     });
   }

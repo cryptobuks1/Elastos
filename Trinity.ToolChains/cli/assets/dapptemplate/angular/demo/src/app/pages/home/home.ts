@@ -35,9 +35,6 @@ export class HomePage {
     // Update system status bar every time we re-enter this screen.
     if (typeof titleBarManager !== 'undefined') {
       titleBarManager.setTitle("Demo Template");
-      titleBarManager.setBackgroundColor("#181d20");
-      titleBarManager.setForegroundMode(TitleBarPlugin.TitleBarForegroundMode.LIGHT);
-      titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
     }
   }
 }

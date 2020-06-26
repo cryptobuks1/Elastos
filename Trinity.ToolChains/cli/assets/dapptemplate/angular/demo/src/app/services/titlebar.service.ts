@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { TitlebarDemoPage } from '../pages/titlebar/titlebar-demo/titlebar-demo.page';
+import { Router } from '@angular/router';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -27,12 +28,24 @@ export class TitlebarService {
       example: 'assets/titlebar/color.png'
     },
     {
+      type: 'Icons',
+      title: 'Customize Icons',
+      method: 'setIcon',
+      message: 'Setting an icon is a special way add buttons to your titlebar. To set an icon, make sure to have a listener ready once your app is rendered. Then you can add your icon to a page where you want it revealed using the page\'s life cycle.',
+      message3: 'Make sure to declare the position of the icon, a key (special name to handle the icon) and the icon itself which you can set the path for or simply use one of elastOS built-in icons.',
+      example2: 'assets/titlebar/listener.png',
+      example3: 'assets/titlebar/setIcon.png',
+    },
+    {
       type: 'Navigation',
       title: 'Customize Navigation',
-      method: 'setNavigationMode',
-      message: 'You have three simple options to navigate through your app: return to the browser, return to the previous page or just close the app. Declaring any of these options will add a back or close key to the left corner of your titlebar.',
-      message2: 'It\'s pretty straight forward on how they work. If you declare your navigation as HOME in your app page, the back key will return you to the browser and minimize the app. Declaring BACK will navigate to the previous page and declaring CLOSE will terminate the app.',
-      example: 'assets/titlebar/navigation.png'
+      method: 'setIcon',
+      message: 'Setting your app\'s navigation is similar to setting an icon to your titlebar.',
+      message2: 'To set naviation in your titlebar, make sure to have a listener ready once your app is rendered. Then you can add (or) remove the elastOS back-icon in a page using a life cycle.',
+      message3: 'Make sure to declare the position of the icon (ideally in the outer left of the titlebar), a key (special name to handle the icon) and the icon itself.',
+      example: 'assets/titlebar/back-listener.png',
+      example2: 'assets/titlebar/setBackIcon.png',
+      example3: 'assets/titlebar/setBackIcon2.png',
     },
     {
       type: 'Items',
@@ -55,8 +68,18 @@ export class TitlebarService {
     modal.present();
   }
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(private modalCtrl: ModalController, private router: Router) { }
 
+  init() {
+    this.setColor();
+
+    titleBarManager.addOnItemClickedListener((menuIcon) => {
+      if (menuIcon.key === "back") {
+        this.modalCtrl.dismiss();
+        this.router.navigate(['/home']);
+      }
+    });
+  }
 
   /******************** Set Title ********************/
   setTitle() {
@@ -73,13 +96,23 @@ export class TitlebarService {
   }
 
   /******************** Set Navigation ********************/
-  setBackNavigation() {
-/*     // Set as app's home page and page's navigation back to browser
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
-    // Set page's navigation to previous page
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
-    // Set page's navigation to close app
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE); */
+  setTitleBarBackKeyShown(show: boolean) {
+    if (show) {
+      titleBarManager.setIcon(TitleBarPlugin.TitleBarIconSlot.INNER_LEFT, {
+        key: "back",
+        iconPath: TitleBarPlugin.BuiltInIcon.BACK
+      });
+    } else {
+      titleBarManager.setIcon(TitleBarPlugin.TitleBarIconSlot.INNER_LEFT, null);
+    }
+  }
+
+  /******************** Set and Handle Icons ********************/
+  setIcon() {
+    titleBarManager.setIcon(TitleBarPlugin.TitleBarIconSlot.OUTER_RIGHT, {
+      key: "add",
+      iconPath:  TitleBarPlugin.BuiltInIcon.ADD
+    });
   }
 
   /******************** Set Menu Items ********************/

@@ -18,7 +18,14 @@ export class TitlebarPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    titleBarManager.setTitle("Titlebar Guide");
+    titleBarManager.setTitle("Titlebar Demo");
+    titleBarManager.setBackgroundColor("#222428");
+    titleBarManager.setForegroundMode(TitleBarPlugin.TitleBarForegroundMode.LIGHT);
+    this.titlebarService.setTitleBarBackKeyShown(true);
+  }
+
+  ionViewWillLeave() {
+    this.titlebarService.setTitleBarBackKeyShown(false);
   }
 
 }

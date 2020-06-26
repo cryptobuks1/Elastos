@@ -6,7 +6,10 @@
       <ion-card-subtitle>method: <span>{{ manager.method }}</span></ion-card-subtitle>
     </ion-card>
     <h3>{{ manager.message }}</h3>
-    <img [src]="manager.example"/>
-    <h4 *ngIf="manager.message2">{{ manager.message2 }}</h4>
+    <img *ngIf="manager.example" [src]="manager.example"/>
+    <h5 *ngIf="manager.message2">{{ manager.message2 }}</h5>
+    <img *ngIf="manager.example2" [src]="manager.example2"/>
+    <img *ngIf="manager.example3" [src]="manager.example3" class="ion-margin-top"/>
+    <h4 *ngIf="manager.message3">{{ manager.message3 }}</h4>
   </ion-grid>
 </ion-content>

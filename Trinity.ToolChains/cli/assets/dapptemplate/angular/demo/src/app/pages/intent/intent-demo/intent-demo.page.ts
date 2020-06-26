@@ -3,6 +3,7 @@ import { NavParams } from '@ionic/angular';
 import { DAppService } from 'src/app/services/dapp.service';
 import { IntentService } from 'src/app/services/intent.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { TitlebarService } from 'src/app/services/titlebar.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -19,7 +20,8 @@ export class IntentDemoPage implements OnInit {
   constructor(
     private navParams: NavParams,
     public dappService: DAppService,
-    public intentService: IntentService
+    public intentService: IntentService,
+    private titlebarService: TitlebarService
   ) { }
 
   ngOnInit() {
@@ -29,10 +31,11 @@ export class IntentDemoPage implements OnInit {
 
   ionViewWillEnter() {
     titleBarManager.setTitle('Intent Demo');
+    this.titlebarService.setTitleBarBackKeyShown(true);
   }
 
   ionViewWillLeave() {
-    titleBarManager.setTitle("Demo Template");
+    this.titlebarService.setTitleBarBackKeyShown(false);
   }
 
   testIntent() {
