@@ -7,6 +7,7 @@ import argparse
 import distutils.dir_util as dir_util
 import json
 import os
+import platform
 import subprocess
 import sys
 import textwrap
@@ -128,6 +129,12 @@ def add_firebase():
     if not os.path.isfile(os.path.join(RUNTIME_DIR_PATH + '/google-services.json')):
         print("Can not find google-services.json!")
         return
+
+    # the version 10.1.0-cli will check pod in ubuntu, can't add cordova-plugin-firebasex for ios
+    # 9.1.2-cli is ok
+    sys = platform.system()
+    if sys != "Darwin":
+        run_cmd("cordova platform rm ios")
 
     cmd="cordova plugin add cordova-plugin-firebasex"
     run_cmd(cmd)
