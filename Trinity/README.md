@@ -6,17 +6,17 @@
 
 ## Introduction
 
-Elastos Trinity integrates all the services that Elastos provides and combines them into a singular framework for DApp developers to use. For this reason, DApp developers only need to write their application using ionic javascript framework and have only one set of Runtime APIs to manage.
+Elastos Trinity is the project name for the multi-platforms elastOS browser applications. It integrates all the services that Elastos provides and combines them into a singular environment for DApp developers to easily build dApps, and for end user to easily use those dApps. 
 
-Elastos Trinity is supported on both Android and iOS.
+DApp developers only need to write their application using the ionic javascript framework and have only one set of Runtime APIs to manage, and their project can run on all major platforms.
 
-While Elastos Trinity is the project codename, this product is also known as the elastOS browser on traditional app stores.
+Elastos Trinity is supported on Android, iOS and soon MacOS, Windows and Linux.
 
 [Join us on Telegram](https://t.me/elastosbrowser)
 
-## Dapp Developers
+## Dapp Developers - should you build this repo?
 
-You don't need to build from source. Instead get the latest APK from app stores or github releases and follow the [Elastos Developer Website Trinity guides](https://developer.elastos.org/elastos_trinity/).
+You don't need to build from source. Instead get the latest APK from app stores or github releases and follow the [Elastos Developer Website Trinity guides](https://developer.elastos.org/build/elastos/).
 
 ## Download Trinity for Android
 [stable version](https://github.com/elastos/Elastos.Trinity/releases/latest)
@@ -58,41 +58,20 @@ git clone --recurse-submodules git@github.com:elastos/Elastos.Trinity.git
 cd Elastos.Trinity
 ```
 
-### Build on Ubuntu / Debian / Linux Host
+Hold on, this will take a while.
+
+### Build on Mac OS, Ubuntu / Debian / Linux Hosts
+
+**For a fresh start or restart:**
 
 ```shell
+./ToolChains/bin/build clobber
 ./ToolChains/bin/build all
 ```
 
-**Using Android Studio:**
+**Depending on what you are working on (runtime, plugins, dapps...)**:
 
-Open project from `Elastos.Trinity/Runtime/platforms/android`
-
-
-### Build on MacOS Host
-
-```shell
-./ToolChains/bin/build all
-```
-
-**Using Android Studio:**
-
-Open project from `Elastos.Trinity/Runtime/platforms/android`
-
-**Using Xcode:**
-
-Open project from `Elastos.Trinity/Runtime/platforms/ios`
-
-
-### Build on Windows Host
-
-```shell
-python ToolChains\bin\build all
-```
-
-**Using Android Studio:**
-
-Open project from `YOUR-PATH/`Elastos.Trinity/Runtime/platforms/android`
+Check **build script options** below.
 
 ### Build script options
 
@@ -113,32 +92,37 @@ NOTE：You can type `./ToolChains/bin/build --help` for more details.
 **build all** takes time, so it is advised to build the relevant target only.
 
 
-## Checking out the source code
-
-To clone the repository in your environment:
+### Build on Windows Host
 
 ```shell
-git clone --recurse-submodules git@github.com:elastos/Elastos.Trinity.git
+python ToolChains\bin\build all
 ```
 
-We use --recurse-submodules here because we need to download the submodules as well. If you forgot to use the argument, you could download the submodules later by typing:
+**Build and run the Android platform in Android Studio:**
+
+- From Android Studio, import the project from `Elastos.Trinity/Runtime/platforms/android`
+- Run the project
+
+**Using Xcode:**
+
+- Open the xcworkspace from `Elastos.Trinity/Runtime/platforms/ios`
+- Run the project
+
+### To update the existing folder to the latest source code
+
+From the root Elastos.Trinity folder, run the following command to update all submodules to master:
 
 ```shell
-git submodule update --init --recursive
-```
-
-And then use git add, commit and push to submit your changes to current project.
-
-To update the whole Trinity (main repo + submodules) to latest master commits, run this:
-
-```shell
-# Pull all submodules on latest master
 ./synccode.sh
-./ToolChains/bin/build clean
-./ToolChains/bin/build all
 ```
 
-If you know what you are doing, you can also only **build runtime**, **build plugin ...**, etc.
+Then build what you need to work on. Choose among:
+
+```shell
+./ToolChains/bin/build runtime
+./ToolChains/bin/build plugin -p Plugins/MyPlugin
+./ToolChains/bin/build dapp ...
+```
 
 ## Architecture - Repositories
 
@@ -162,7 +146,7 @@ The Elastos.Trinity repository contains many git-submodules, as shown in this ov
 
 ## Contribution
 
-We welcome contributions to the Elastos Trinity Project.
+We welcome contributions to the Elastos Trinity Project. Please reach us on telegram if you would like to jump in the code but you don't know how to start, or if you want to know who is currently workin on what.
 
 ## Roadmap
 
