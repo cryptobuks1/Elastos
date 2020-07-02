@@ -32,7 +32,7 @@ git, node, npm, python, cordova, ionic
 
 #### Github
 
-- Upload your SSH public key to your github profile is not already done - https://github.com/settings/keys
+- Upload your SSH public key to your github profile if not already done - https://github.com/settings/keys
 
 #### For Android:
 - Java JDK 1.8 or greater
