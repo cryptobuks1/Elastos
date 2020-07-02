@@ -30,6 +30,10 @@ You don't need to build from source. Instead get the latest APK from app stores 
 
 git, node, npm, python, cordova, ionic
 
+#### Github
+
+- Upload your SSH public key to your github profile is not already done - https://github.com/settings/keys
+
 #### For Android:
 - Java JDK 1.8 or greater
 - Android SDK
