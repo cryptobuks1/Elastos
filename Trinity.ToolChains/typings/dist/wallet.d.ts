@@ -1025,6 +1025,15 @@ declare module WalletPlugin {
         proposalCRCouncilMemberDigest(args, success, error);
 
         /**
+         * Calculate proposal hash.
+         * @param masterWalletID is the unique identification of a master wallet object.
+         * @param chainID unique identity of a sub wallet. Chain id should not be empty.
+         * @param payload Proposal payload signed by owner and CR committee. Same as payload of CreateProposalTransaction()
+         * @return The transaction in JSON format to be signed and published.
+         */
+        calculateProposalHash(args, success, error);
+
+        /**
          * Create CRC Proposal transaction.
          * @param masterWalletID is the unique identification of a master wallet object.
          * @param chainID unique identity of a sub wallet. Chain id should not be empty.
