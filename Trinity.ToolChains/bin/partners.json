@@ -1,6 +1,15 @@
 {
     "partnerapps": [
         {
+            "name": "assist",
+            "repourl": "https://github.com/tuum-tech/assist-capsule",
+            "tag": "v0.0.1",
+            "folder": "tech.tuum.assist",
+            "outputPath":"www",
+            "platforms": ["android", "ios","desktop"],
+            "commit": ""
+        },
+        {
             "name": "dposvoting",
             "repourl": "https://github.com/elastos/Elastos.Trinity.DApps.DPoSVoting.git",
             "tag": "",
