@@ -38,3 +38,11 @@ UserInterfaceState.xcuserstate
 package-lock.json
 
 Dapps/Partner/
+
+*.jks
+*.zip
+*.tar
+*.plist
+*.json
+DAppSignatures/
+Dependency/
