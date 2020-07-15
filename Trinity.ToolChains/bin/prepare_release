@@ -100,6 +100,10 @@ def push_code():
     cmd = "git add src/assets/manifest.json && git commit -m 'increase version for release' && git push"
     run_cmd(cmd)
 
+def push_runtime_code():
+    cmd = "git add scripts/patches/after_platform_add_android/build_gradle.patch && git commit -m 'increase version for release' && git push"
+    run_cmd(cmd)
+
 startTime = timeit.default_timer()
 
 if args.target == "all" or args.target == "build":
@@ -114,6 +118,14 @@ if args.target == "tag":
     tag()
 
 if args.target == "push":
+    update_code = input("Do you manually modify the version name in scripts/patches/after_platform_add_android/build_gradle.patch. Type 'y' to continue :")
+    if update_code.lower() != 'y':
+        sys.exit(1)
+
+    print("Runtime: ")
+    os.chdir(RUNTIME_DIR_PATH)
+    push_runtime_code()
+
     print("Launcher: ")
     os.chdir(LAUNCHER_DIR_PATH)
     push_code()
