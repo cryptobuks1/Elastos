@@ -69,7 +69,7 @@ declare module WalletPlugin {
 
     interface WalletManager {
         // TODO: define types for all arguments and callback parameters
-        print(args, success, error);
+        // print(args, success, error);
 
         //MasterWalletManager
 
@@ -216,11 +216,35 @@ declare module WalletPlugin {
         exportWalletWithMnemonic(args, success, error);
 
         /**
+         * Verify passphrase and pay password whether same as current wallet.
+         * @param masterWalletID is the unique identification of a master wallet object.
+         * @param passphrase password for  mnemonic. Passphrase should between 8 and 128.
+         * @param payPassword password for transaction. Pay password should between 8 and 128.
+         * @return If success will return the mnemonic of master wallet.
+         */
+        verifyPassPhrase(args, success, error);
+
+        /**
+         * Verify pay password whether same as current wallet.
+         * @param masterWalletID is the unique identification of a master wallet object.
+         * @param payPassword password for transaction. Pay password should between 8 and 128.
+         * @return If success will return the mnemonic of master wallet.
+         */
+        verifyPayPassword(args, success, error);
+
+        /**
          * Destroy a sub wallet created by the master wallet.
          * @param masterWalletID is the unique identification of a master wallet object.
          * @param chainID chain ID of subWallet.
          */
         destroySubWallet(args, success, error);
+
+        /**
+         * Get public key info.
+         * @param masterWalletID is the unique identification of a master wallet object.
+         * @return public key info.
+         */
+        getPubKeyInfo(args, success, error);
 
         /**
          * Verify an address which can be normal, multi-sign, cross chain, or id address.
@@ -261,6 +285,14 @@ declare module WalletPlugin {
          * @param chainID unique identity of a sub wallet. Chain id should not be empty.
          */
         syncStop(args, success, error);
+
+        /**
+         * Will delete all Merkle blocks and all transactions except the private key.
+               * And then resync from the beginning.
+         * @param masterWalletID is the unique identification of a master wallet object.
+         * @param chainID unique identity of a sub wallet. Chain id should not be empty.
+         */
+        reSync(args, success, error);
 
         /**
          * Get balances of all addresses in json format.
@@ -326,7 +358,7 @@ declare module WalletPlugin {
          * @param masterWalletID is the unique identification of a master wallet object.
          * @param chainID unique identity of a sub wallet. Chain id should not be empty.
          * @param fromAddress specify which address we want to spend, or just input empty string to let wallet choose UTXOs automatically.
-         * @param toAddress specify which address we want to send.
+         * @param targetAddress specify which address we want to send.
          * @param amount specify amount we want to send. "-1" means max.
          * @param memo input memo attribute for describing.
          * @return If success return the content of transaction in json format.
@@ -357,7 +389,7 @@ declare module WalletPlugin {
          * Sign a transaction or append sign to a multi-sign transaction and return the content of transaction in json format.
          * @param masterWalletID is the unique identification of a master wallet object.
          * @param chainID unique identity of a sub wallet. Chain id should not be empty.
-         * @param createdTx content of transaction in json format.
+         * @param tx transaction created by Create*Transaction().
          * @param payPassword use to decrypt the root private key temporarily. Pay password should between 8 and 128, otherwise will throw invalid argument exception.
          * @return If success return the content of transaction in json format.
          */
@@ -375,13 +407,13 @@ declare module WalletPlugin {
          * [{"SignType":"Standard","Signers":["0207d8bc14c4bdd79ea4a30818455f705bcc9e17a4b843a5f8f4a95aa21fb03d77"]},{"SignType":"Standard","Signers":["02a58d1c4e4993572caf0133ece4486533261e0e44fb9054b1ea7a19842c35300e"]}]
          *
          */
-        getTransactionSignedSigners(args, success, error);
+        getTransactionSignedInfo(args, success, error);
 
         /**
          * Publish a transaction to p2p network.
          * @param masterWalletID is the unique identification of a master wallet object.
          * @param chainID unique identity of a sub wallet. Chain id should not be empty.
-         * @param signedTx content of transaction in json format.
+         * @param tx signed transaction.
          * @return Sent result in json format.
          */
         publishTransaction(args, success, error);
@@ -401,15 +433,11 @@ declare module WalletPlugin {
 
         /**
          * Add a sub wallet callback object listened to current sub wallet.
-         * @param masterWalletID is the unique identification of a master wallet object.
-         * @param chainID unique identity of a sub wallet. Chain id should not be empty.
          */
         registerWalletListener(args, success, error);
 
         /**
          * Remove a sub wallet callback object listened to current sub wallet.
-         * @param masterWalletID is the unique identification of a master wallet object.
-         * @param chainID unique identity of a sub wallet. Chain id should not be empty.
          */
         removeWalletListener(args, success, error);
 
