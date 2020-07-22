@@ -86,6 +86,10 @@ install:
     fi
 
 script:
+  - if [[ "$DEPLOY" != "" ]]; then
+      $TRAVIS_BUILD_DIR/ToolChains/bin/build partners -pf $BUILD_PLATFORM;
+      sed -i 's/protectList/protectList-disable/' $TRAVIS_BUILD_DIR/Runtime/www_files/config/config.json;
+    fi
   - export APK_PATH=$TRAVIS_BUILD_DIR/Runtime/platforms/android/app/build/outputs/apk/debug
   - $TRAVIS_BUILD_DIR/ToolChains/bin/build $BUILD_TARGET -pf $BUILD_PLATFORM
   - ls -l $APK_PATH
