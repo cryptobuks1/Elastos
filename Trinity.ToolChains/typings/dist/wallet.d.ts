@@ -288,7 +288,7 @@ declare module WalletPlugin {
 
         /**
          * Will delete all Merkle blocks and all transactions except the private key.
-               * And then resync from the beginning.
+         * And then resync from the beginning.
          * @param masterWalletID is the unique identification of a master wallet object.
          * @param chainID unique identity of a sub wallet. Chain id should not be empty.
          */
