@@ -12,6 +12,7 @@ import subprocess
 import sys
 import textwrap
 import timeit
+from collections import OrderedDict
 
 sys.path.append(os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + '/../lib'))
 import ela_plugin
@@ -36,6 +37,12 @@ parser.add_argument('-p', '--path', dest='target_path', metavar='PATH', required
 parser.add_argument('--delete', action='store_true', help='Delete the dapp.')
 parser.add_argument('-pf', '--platform', dest='platform', required=False,
                     help='Specify the build platform.')
+
+parser.add_argument('-bt', '--buildtype', dest='buildtype', required=False,
+                    help='Specify the build type, elastOS or native, default is elastOS.')
+parser.add_argument('-bv', '--buildvariant', dest='buildvariant', required=False,
+                    help='Specify the build variant.')
+
 parser.add_argument('--release', action='store_true', help='build release')
 parser.add_argument('--buildarg', dest='buildarg', required=False,
                     help='Specify the build arg.')
@@ -67,6 +74,8 @@ BUILT_IN_DIR_PATH=os.path.join(RUNTIME_DIR_PATH, "www/built-in/")
 PLUGIN_DIR_PATH=os.path.join(PROJECT_DIR_PATH, "Plugins")
 BUILT_IN_MIRROR_ANDROID=os.path.join(RUNTIME_DIR_PATH, "platforms/android/app/src/main/assets/www/built-in/")
 BUILT_IN_MIRROR_IOS=os.path.join(RUNTIME_DIR_PATH, "platforms/ios/www/built-in/")
+CONFIG_MIRROR_ANDROID=os.path.join(RUNTIME_DIR_PATH, "platforms/android/app/src/main/assets/www/config/config.json")
+CONFIG_MIRROR_IOS=os.path.join(RUNTIME_DIR_PATH, "platforms/ios/www/config/config.json")
 
 def run_cmd(cmd, ignore_error=False):
     print("Running: " + cmd)
@@ -217,6 +226,33 @@ def delete_partnerapps():
             app_fullpath = os.path.join(app_fullpath, app['folder'])
         delete_app(app_fullpath)
 
+def updateJsonFile(jsonfile, key, value):
+    file_in = open(jsonfile, "r")
+    data = json.load(file_in, object_pairs_hook=OrderedDict)
+    file_in.close()
+
+    data[key] = value
+
+    file_out = open(jsonfile, 'w')
+    file_out.write(json.dumps(data, indent=4))
+    file_out.close()
+
+def updateConfigFile(key, value):
+    config_path = os.path.join(RUNTIME_DIR_PATH, "www/config/config.json")
+    updateJsonFile(config_path, key, value)
+
+    # update mirror config file
+    if os.path.isfile(CONFIG_MIRROR_ANDROID):
+        updateJsonFile(CONFIG_MIRROR_ANDROID, key, value)
+    if os.path.isfile(CONFIG_MIRROR_IOS):
+        updateJsonFile(CONFIG_MIRROR_IOS, key, value)
+
+def updateConfig():
+    if args.buildtype:
+        updateConfigFile("build.type", args.buildtype)
+    if args.buildvariant:
+        updateConfigFile("build.variant", args.buildvariant)
+
 startTime = timeit.default_timer()
 
 if TOOLCHAINS_DIR_NAME != "ToolChains" or \
@@ -300,6 +336,7 @@ if args.target == "partners":
 if args.target == "all" or args.target == "launcher" or args.target == "runtime":
     os.chdir(RUNTIME_DIR_PATH)
     copy_tree("www_files", "www", False)
+    updateConfig()
     ela_plugin.plugin_prepare(True)
     run_cmd("npm install")
     run_cmd("cordova prepare")
