@@ -441,6 +441,13 @@ declare module WalletPlugin {
          */
         removeWalletListener(args, success, error);
 
+        /**
+         * Get last block information including "Height", "Timestamp", "Hash"
+         * @return information in json format.
+         */
+        getLastBlockInfo(args, success, error);
+
+
         // sideChainSubWallet
 
         /**
