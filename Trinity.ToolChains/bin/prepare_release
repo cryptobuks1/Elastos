@@ -24,6 +24,10 @@ parser.add_argument('target', metavar='TARGET', choices=['all', 'build', 'incver
                      '''))
 parser.add_argument('-pf', '--platform', dest='platform', required=False,
                     help='Specify the build platform.')
+parser.add_argument('-bt', '--buildtype', dest='buildtype', required=False,
+                    help='Specify the build type, elastOS or native, default is elastOS.')
+parser.add_argument('-bv', '--buildvariant', dest='buildvariant', required=False,
+                    help='Specify the build variant.')
 args = parser.parse_args()
 
 SCRIPT_PATH=os.path.realpath(__file__)
@@ -104,12 +108,40 @@ def push_runtime_code():
     cmd = "git add scripts/patches/after_platform_add_android/build_gradle.patch && git commit -m 'increase version for release' && git push"
     run_cmd(cmd)
 
+def needPartnerDapps():
+    if args.buildvariant and  args.buildvariant == "appstore":
+        return False
+    return True
+
+def getBuildArg():
+    buildArg = ""
+    if args.buildtype:
+        buildArg += " -bt " + args.buildtype
+    if args.buildvariant:
+        buildArg += " -bv " + args.buildvariant
+    return buildArg
+
+def let_user_pick(options):
+    for idx, element in enumerate(options):
+        print("{}) {}".format(idx+1,element))
+
+    while True:
+        i = input("Enter number: ")
+        try:
+            if 0 < int(i) <= len(options):
+                return int(i) - 1
+        except:
+            pass
+    return None
+
 startTime = timeit.default_timer()
 
 if args.target == "all" or args.target == "build":
     if not args.platform:
         print("Pls choose the platform: [android, ios]")
-        exit(0)
+        options = ["android", "ios"]
+        index = let_user_pick(options)
+        args.platform = options[index]
 
 if args.target == "all" or args.target == "update":
     update_code()
@@ -167,9 +199,11 @@ if args.target == "incversion":
 if args.target == "all" or args.target == "build":
     os.chdir(PROJECT_DIR_PATH)
     check_firebase()
+    # delete the partners dapp in mirror folder.
     run_cmd('./ToolChains/bin/build partners --delete')
-    run_cmd('./ToolChains/bin/build partners -pf ' + args.platform)
-    run_cmd('./ToolChains/bin/build all -pf ' + args.platform + ' --release')
+    if needPartnerDapps():
+        run_cmd('./ToolChains/bin/build partners -pf ' + args.platform)
+    run_cmd('./ToolChains/bin/build all -pf ' + args.platform + ' --release' + getBuildArg())
 
 elapsed = timeit.default_timer() - startTime
 minutes = elapsed / 60
