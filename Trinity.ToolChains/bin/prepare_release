@@ -109,7 +109,7 @@ def push_runtime_code():
     run_cmd(cmd)
 
 def needPartnerDapps():
-    if args.buildvariant and  args.buildvariant == "appstore":
+    if args.buildvariant and  args.buildvariant == "itunesappstore":
         return False
     return True
 
