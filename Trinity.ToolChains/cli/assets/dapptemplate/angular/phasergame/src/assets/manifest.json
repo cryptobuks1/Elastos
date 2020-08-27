@@ -1,0 +1,40 @@
+{
+  "id": "elastos.trinity.dapps.gamedemo2",
+  "version": "1.0.2",
+  "version_code": 3,
+  "name": "Phaser Game Demo",
+  "short_name": "Phaser Game Demo",
+  "short_description": "Collect ELA",
+  "description": "Load up your ELA Bags before the bomb gets ya!",
+  "start_url": "index.html",
+  "type": "app",
+  "start_visible": "hide",
+  "category": "games",
+  "icons": [
+    {
+      "src": "assets/images/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    },
+    {
+      "src": "assets/images/logo.jpg",
+      "sizes": "128x128",
+      "type": "image/jpg"
+    }
+  ],
+  "author": {
+    "name": "Chad Racelis",
+    "email": "chadracelis@yahoo.com",
+    "website": "https://www.elastos.org"
+  },
+  "default_locale": "en",
+  "plugins": [
+    "Device",
+    "NetworkStatus"
+  ],
+  "urls": [
+  ],
+  "background_color": "#4e8ef7",
+  "theme_display": "show",
+  "theme_color": "#4e8ef7"
+}
